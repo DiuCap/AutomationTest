@@ -21,19 +21,21 @@ def site_login(url, username, password):
 	WebDriverWait(driver, timeout).until(phone_present)
 
 	phone_element = driver.find_element_by_name('phone')
-	if phone_element:
-		phone_element.send_keys(username)
-		
-		password_element = driver.find_element_by_name('password')
-		if password_element:
-			password_element.send_keys(password)
+	if not phone_element:
+	    raise Exception("Cannot find phone elemenet. Abort")
+        
+    phone_element.send_keys(username)
+    password_element = driver.find_element_by_name('password')
+    if not password_element:
+        raise Exception("Cannot find password elemenet. Abort")
+        
+    password_element.send_keys(password)
+    driver.find_element_by_class_name('full-width').click()
 
-			driver.find_element_by_class_name('full-width').click()
+    login_wait = WebDriverWait(driver, timeout)
+    login_wait.until(lambda driver: driver.current_url != url)
 
-			login_wait = WebDriverWait(driver, timeout)
-			login_wait.until(lambda driver: driver.current_url != url)
-			
-			get_age('https://stage-www.keyflow.com/en/profile/me')
+    get_age('https://stage-www.keyflow.com/en/profile/me')
 
 # credentials
 username = '+46761177777'
